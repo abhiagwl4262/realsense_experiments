@@ -5,20 +5,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
+#include <pcl/visualization/cloud_viewer.h>
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
 
-// void callback(const PointCloud::ConstPtr& msg)
-// {
-//   printf ("Cloud: width = %d, height = %d\n", msg->width, msg->height);
-//   BOOST_FOREACH (const pcl::PointXYZ& pt, msg->points)
-//     printf ("\t(%f, %f, %f)\n", pt.x, pt.y, pt.z);
-// }
-
-int main(int argc, char** argv)
+int main (int argc, char** argv)
 {
-  ros::init(argc, argv, "sub_pcl");
-  ros::NodeHandle nh;
-  ros::Subscriber sub = nh.subscribe<PointCloud>("/camera/depth_registered/points", 1, callback);
-  ros::spin();
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
+  if (pcl::io::loadPCDFile<pcl::PointXYZ> ("/home/hitech/rs_ws/data/1539638968743881.pcd", *cloud) == -1) //* load the file
+  {
+    PCL_ERROR ("Couldn't read file test_pcd.pcd \n");
+    return (-1);
+  }
+  std::cout << "Loaded "
+            << cloud->width  << " " << cloud->height
+            << " data points from test_pcd.pcd with the following fields: "
+            << std::endl;
+  
+
+  pcl::PointCloud<pcl::PointXYZRGB>::Ptr cropped_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);  
+  pcl::copyPointCloud (*cloud, *cropped_cloud);
+
+
+  pcl::visualization::PCLVisualizer viewer("PCL Viewer"); 
+  // pcl::visualization::PointCloudColorHandlerGenericField<pcl::PointXYZRGB>rgb(cropped_cloud);
+  // viewer.addPointCloud<pcl::PointXYZRGB> (cropped_cloud, rgb, "sample cloud"); 
+  // viewer.showCloud (cropped_cloud);
+  // while (!viewer.wasStopped ())
+  // {
+      
+  // }
+  // return (0);
 }

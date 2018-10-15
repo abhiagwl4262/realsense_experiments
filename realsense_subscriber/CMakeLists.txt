@@ -5,6 +5,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "--std=gnu++11 ${CMAKE_CXX_FLAGS}")
 
 find_package( PCL REQUIRED )
+find_package( OpenCV 3.3.1 REQUIRED )
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
@@ -22,6 +23,7 @@ include_directories(
 #  include
   ${catkin_INCLUDE_DIRS} 
   ${PCL_INCLUDE_DIRS} 
+  ${OpenCV_INCLUDE_DIRS} 
 )
 
 add_executable(realsense_subscriber_node src/main.cpp)
@@ -30,4 +32,5 @@ set_target_properties(realsense_subscriber_node PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(realsense_subscriber_node 
 	${catkin_LIBRARIES}
 	${PCL_LIBRARIES}
+  	${OpenCV_LIBRARIES} 
 )
